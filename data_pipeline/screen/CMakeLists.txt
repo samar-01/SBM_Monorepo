@@ -3,6 +3,8 @@ project(screen)
 
 find_package(raylib 3.0 REQUIRED) # Requires at least version 3.0
 
+set(CMAKE_CXX_STANDARD 17)
+
 add_executable(${PROJECT_NAME} main.cpp)
 
 target_link_libraries(${PROJECT_NAME} raylib)
