@@ -2,6 +2,8 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <vector>
+#include <charconv>
+#include <boost/lexical_cast.hpp>
 using namespace std;
 
 // #define CUSTOM_FONT
@@ -18,6 +20,7 @@ public:
 	int cvtTemp;
 	int engineTemp;
 	void init();
+	void print();
 	#ifdef TEST_MODE
 	void randomize();
 	#endif
@@ -25,9 +28,11 @@ private:
 	vector<int*> datapoints;
 } testData;
 void updateData();
+const char* dat2char(int i);
+const char* dat2char(int i, string thing);
 
-void text(char* text, Vector2 pos);
-void text(char* text, Vector2 pos, int size);
+void text(const char* text, Vector2 pos);
+void text(const char* text, Vector2 pos, int size);
 
 #ifdef CUSTOM_FONT
 Font font;
@@ -43,7 +48,7 @@ int main(void) {
 	const int screenHeight = 480;
 
 	InitWindow(screenWidth, screenHeight, "SBU Motorsports");
-	SetTargetFPS(60);
+	SetTargetFPS(30);
 
 	Texture2D texture = LoadTexture("resources/SBMLogo.png");
 	#ifdef CUSTOM_FONT
@@ -64,10 +69,11 @@ int main(void) {
 	while (!WindowShouldClose()) {
 		BeginDrawing();
 		ClearBackground(BLACK);
-		DrawFPS(0, 0);
+		// DrawFPS(0, 0);
 		DrawTexture(texture, 0, screenHeight - texture.height - bottomSize.y, WHITE);
 		text(bottomText, (Vector2) { (screenWidth - bottomSize.x) / 2, screenHeight - bottomSize.y }, bottomFontSize);
-		text(bottomText, (Vector2) { 0, 0 });
+		testData.print();
+
 		EndDrawing();
 		updateData();
 	}
@@ -81,10 +87,10 @@ int main(void) {
 }
 
 void updateData() {
-	testData;
+	testData.randomize();
 }
 
-void text(char* inText, Vector2 pos, int size) {
+void text(const char* inText, Vector2 pos, int size) {
 	#ifdef CUSTOM_FONT
 	DrawTextEx(font, inText, pos, size, spacing, WHITE);
 	#else
@@ -92,7 +98,7 @@ void text(char* inText, Vector2 pos, int size) {
 	#endif
 }
 
-void text(char* inText, Vector2 pos) {
+void text(const char* inText, Vector2 pos) {
 	text(inText, pos, fontSize);
 }
 
@@ -107,4 +113,24 @@ void Data::randomize() {
 	for (int i = 0; i < datapoints.size(); i++) {
 		*datapoints.at(i) = clamp(*datapoints.at(i) + GetRandomValue(-1, 1), 0, 30);
 	}
+}
+
+void Data::print(){
+	text(dat2char(mph, "MPH: "), (Vector2) { 0, 0 });
+	text(dat2char(fbp, "FBP: "), (Vector2) { 0, fontSize });
+	text(dat2char(rbp, "RBP: "), (Vector2) { 0, fontSize * 2 });
+	text(dat2char(throttle, "throttle: "), (Vector2) { 0, fontSize * 3 });
+	text(dat2char(brake, "brake: "), (Vector2) { 0, fontSize * 4 });
+	text(dat2char(steer, "steer: "), (Vector2) { 0, fontSize * 5 });
+	text(dat2char(cvtTemp, "cvtTemp: "), (Vector2) { 0, fontSize * 6 });
+	text(dat2char(engineTemp, "engineTemp: "), (Vector2) { 0, fontSize * 7 });
+}
+
+const char* dat2char(int i, string thing) {
+	thing += to_string(i);
+	return thing.c_str();
+	// return TextFormat("%i", i);
+}
+const char* dat2char(int i) {
+	return dat2char(i, "");
 }
