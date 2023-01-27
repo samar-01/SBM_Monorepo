@@ -1,5 +1,7 @@
 #include "raylib.h"
 
+void updateData();
+
 int main(void) {
 	const int screenWidth = 800;
 	const int screenHeight = 480;
@@ -7,24 +9,32 @@ int main(void) {
 	InitWindow(screenWidth, screenHeight, "SBU Motorsports");
 	SetTargetFPS(60);
 	Texture2D texture = LoadTexture("resources/SBMLogo.png");
-	Font fontTtf = LoadFontEx("resources/font.ttf", 32, 0, 250);
+	const int fontSize = 50;
+	Font font = LoadFontEx("resources/font.ttf", fontSize, 0, 250);
+	const int spacing = 2;
+	const char* bottomText = "SBU Motorsports";
+	Vector2 bottomSize = MeasureTextEx(font, bottomText, fontSize, spacing);
 
 	#ifdef __arm__
-	if (!IsWindowFullscreen()){
+	if (!IsWindowFullscreen()) {
 		ToggleFullscreen();
 	}
 	#endif
 
-	while (!WindowShouldClose()){
+	while (!WindowShouldClose()) {
 		BeginDrawing();
 		ClearBackground(BLACK);
-		DrawTextEx(fontTtf, "hello12345", (Vector2){0.0f,0.0f}, 30.0f, 2, WHITE);
-		DrawTexture(texture, 0, screenHeight - texture.height, WHITE);
+		DrawTexture(texture, 0, screenHeight - texture.height - bottomSize.y, WHITE);
+		DrawTextEx(font, bottomText, (Vector2) { (screenWidth - bottomSize.x) / 2, screenHeight - bottomSize.y }, fontSize, spacing, WHITE);
 		EndDrawing();
 	}
 
 	UnloadTexture(texture);
-	UnloadFont(fontTtf);
+	UnloadFont(font);
 	CloseWindow();
 	return 0;
+}
+
+void updateData(){
+	
 }
