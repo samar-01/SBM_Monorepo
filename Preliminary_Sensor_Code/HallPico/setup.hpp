@@ -8,7 +8,7 @@
 using namespace std;
 #define TEETH 32.0
 // #define VERBOSE
-#define TEST_MODE
+// #define TEST_MODE
 
 const uint8_t NUM_HALLS = 2;
 const uint8_t HALLS[NUM_HALLS] = { 2,3 };
@@ -16,6 +16,7 @@ uint64_t prevTimes[NUM_HALLS]; // Pico gives time as a 64 bit number with time_u
 uint64_t timeDifs[NUM_HALLS];
 uint16_t rpms[NUM_HALLS]; // RPM is going to be less than 65535 unless we go supersonic, so uint16_t is fine
 const uint64_t DEBOUNCE_TIME = 100; // Minimum time between switching events to stop it from having near infinite speed.
+const uint64_t MAX_PULSE_TIME = 118590; // Will not measure below 1mph
 
 #ifdef TEST_MODE
 #define TEST_MAX 5000

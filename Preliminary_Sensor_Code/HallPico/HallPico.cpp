@@ -81,6 +81,9 @@ void sendRPMs() {
 		} else {
 			rpms[i] = 0;
 		}
+		if (time_us_64() - prevTimes[i] > MAX_PULSE_TIME){
+			rpms[i] = 0;
+		}
 		#ifdef VERBOSE
 		cout << timeDifs[i] << " ";
 		#endif
